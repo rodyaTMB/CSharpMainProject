@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Model.Runtime.Projectiles;
 using UnityEngine;
 
@@ -26,8 +26,8 @@ namespace UnitBrains.Player
             for (float i = 0f; i <= GetTemperature(); i++){
                 var projectile = CreateProjectile(forTarget);
                 AddProjectileToList(projectile, intoList);
-                Debug.Log("Текущая температура " + GetTemperature());
-                Debug.Log("Номер снаряда " + (i + 1f));
+                // Debug.Log("Текущая температура " + GetTemperature());
+                // Debug.Log("Номер снаряда " + (i + 1f));
             }
 
             IncreaseTemperature();
@@ -48,10 +48,25 @@ namespace UnitBrains.Player
             ///////////////////////////////////////
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
+            /// DistanceToOwnBase - возвращает текущее расстояние от цели до базы
+
+            var minRange = float.MaxValue;
+            Vector2Int target = Vector2Int.one;
+            float curRange;
+        
             List<Vector2Int> result = GetReachableTargets();
-            while (result.Count > 1)
-            {
-                result.RemoveAt(result.Count - 1);
+            bool isNotEmpty = result.Count > 0;
+            while (result.Count > 0){
+                curRange = DistanceToOwnBase(result[result.Count - 1]);
+                if (curRange < minRange){
+                    target = result[result.Count - 1];
+                    minRange = curRange;
+                }
+                result.RemoveAt(result.Count - 1);     
+            }
+
+            if(isNotEmpty){
+                result.Add(target);
             }
             return result;
             ///////////////////////////////////////
